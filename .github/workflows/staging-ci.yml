@@ -1,0 +1,244 @@
+name: Staging CI - Unity Build & Test
+
+on:
+  pull_request:
+    branches: [ staging-CI ]
+  push:
+    branches: [ staging-CI ]
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+jobs:
+  # Test job to run Unity tests
+  test:
+    name: Test Unity Project
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # Cache Unity installation
+      - name: Cache Unity
+        uses: actions/cache@v4
+        with:
+          path: /opt/unity
+          key: unity-6000.2.2f1-linux
+          restore-keys: |
+            unity-6000.2.2f1-
+            unity-
+
+      # Cache Unity Library folder
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}-${{ hashFiles('Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}-
+            Library-
+
+      # Run Unity tests
+      - name: Run Unity Tests
+        uses: game-ci/unity-test-runner@v4
+        with:
+          unityVersion: 6000.2.2f1
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Unity Test Results
+
+      # Upload test results
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Test results
+          path: test-results
+
+  # Build job for multiple platforms
+  build:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64 # Windows 64-bit
+          - StandaloneLinux64 # Linux 64-bit
+          - StandaloneOSX # macOS
+          - WebGL # WebGL
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # Cache Unity installation
+      - name: Cache Unity
+        uses: actions/cache@v4
+        with:
+          path: /opt/unity
+          key: unity-6000.2.2f1-linux-${{ matrix.targetPlatform }}
+          restore-keys: |
+            unity-6000.2.2f1-linux
+            unity-6000.2.2f1-
+            unity-
+
+      # Cache Unity Library folder
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}-${{ hashFiles('Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}-
+            Library-${{ matrix.targetPlatform }}-
+            Library-
+
+      # Build the Unity project
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@v4
+        with:
+          unityVersion: 6000.2.2f1
+          targetPlatform: ${{ matrix.targetPlatform }}
+          buildsPath: build
+          buildName: Kingdoms-${{ matrix.targetPlatform }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Upload build artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build-${{ matrix.targetPlatform }}
+          path: build
+          retention-days: 7
+
+  # Code quality checks
+  code-quality:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Check for common Unity project issues
+      - name: Check Unity project structure
+        run: |
+          echo "Checking Unity project structure..."
+          
+          # Check if essential Unity directories exist
+          if [ ! -d "Assets" ]; then
+            echo "❌ Assets directory not found!"
+            exit 1
+          fi
+          
+          if [ ! -d "ProjectSettings" ]; then
+            echo "❌ ProjectSettings directory not found!"
+            exit 1
+          fi
+          
+          if [ ! -f "ProjectSettings/ProjectVersion.txt" ]; then
+            echo "❌ ProjectVersion.txt not found!"
+            exit 1
+          fi
+          
+          echo "✅ Unity project structure is valid"
+          
+          # Display Unity version
+          echo "Unity version: $(cat ProjectSettings/ProjectVersion.txt)"
+          
+          # Check for large files that shouldn't be committed
+          echo "Checking for large files..."
+          find . -type f -size +50M -not -path "./.git/*" | while read file; do
+            echo "⚠️ Large file found: $file ($(du -h "$file" | cut -f1))"
+          done
+          
+          # Check for missing .meta files
+          echo "Checking for missing .meta files..."
+          find Assets -type f -not -name "*.meta" | while read file; do
+            if [ ! -f "$file.meta" ]; then
+              echo "⚠️ Missing .meta file for: $file"
+            fi
+          done
+          
+          echo "✅ Code quality checks completed"
+
+      # Check C# code style (if any C# files exist)
+      - name: Check C# code style
+        run: |
+          echo "Checking C# code style..."
+          cs_files=$(find Assets -name "*.cs" | wc -l)
+          echo "Found $cs_files C# files"
+          
+          if [ $cs_files -gt 0 ]; then
+            echo "C# files found - basic style checks:"
+            # Check for basic code style issues
+            find Assets -name "*.cs" -exec grep -l "	" {} \; | while read file; do
+              echo "⚠️ File contains tabs instead of spaces: $file"
+            done
+            
+            # Check for trailing whitespace
+            find Assets -name "*.cs" -exec grep -l " $" {} \; | while read file; do
+              echo "⚠️ File contains trailing whitespace: $file"
+            done
+            
+            echo "✅ C# style checks completed"
+          else
+            echo "No C# files found to check"
+          fi
+
+  # Summary job to report overall status
+  ci-summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [test, build, code-quality]
+    if: always()
+    steps:
+      - name: Report CI Status
+        run: |
+          echo "## CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check test results
+          if [ "${{ needs.test.result }}" == "success" ]; then
+            echo "✅ **Tests**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Tests**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Check build results
+          if [ "${{ needs.build.result }}" == "success" ]; then
+            echo "✅ **Build**: All platforms built successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Build**: Some platforms failed to build" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Check code quality results
+          if [ "${{ needs.code-quality.result }}" == "success" ]; then
+            echo "✅ **Code Quality**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Code Quality**: Issues found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          
+          # Overall status
+          if [ "${{ needs.test.result }}" == "success" ] && [ "${{ needs.build.result }}" == "success" ] && [ "${{ needs.code-quality.result }}" == "success" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "🎉 **Overall Status**: All checks passed! Ready for merge." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Overall Status**: Some checks failed. Please review before merging." >> $GITHUB_STEP_SUMMARY
+          fi
