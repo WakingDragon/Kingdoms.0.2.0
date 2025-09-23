@@ -57,6 +57,7 @@ jobs:
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: Development Test Results
+          customParameters: -logfile -
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -98,6 +99,7 @@ jobs:
           buildsPath: build
           buildName: Kingdoms-Dev-${{ github.event.inputs.build_platform }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          customParameters: -logfile -
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

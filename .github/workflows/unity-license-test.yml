@@ -38,9 +38,19 @@ jobs:
             exit 1
           else
             echo "✅ UNITY_LICENSE is set (length: ${#UNITY_LICENSE} characters)"
+            # Check if it looks like a proper Unity license file
+            if echo "$UNITY_LICENSE" | grep -q "UnityLicenseVersion"; then
+              echo "✅ License appears to be in Unity license format"
+            else
+              echo "⚠️ License might not be in the expected Unity format"
+            fi
           fi
           
           echo "All Unity license secrets are present!"
+          
+          # Additional check for common license activation issues
+          echo "Checking for common Unity 6.x GameCI issues..."
+          echo "Unity Version: 6000.2.2f1 (Unity 6.x requires specific GameCI configuration)"
 
       - name: Test Unity License Activation
         uses: game-ci/unity-test-runner@v4
@@ -52,6 +62,8 @@ jobs:
           unityVersion: 6000.2.2f1
           testMode: editmode
           checkName: License Test
+          # Add custom parameters for Unity 6.x compatibility
+          customParameters: -logfile -
         continue-on-error: true
       
       - name: Report Results
