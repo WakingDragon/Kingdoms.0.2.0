@@ -76,9 +76,9 @@ jobs:
       matrix:
         targetPlatform:
           - StandaloneWindows64 # Windows 64-bit
-          - StandaloneLinux64 # Linux 64-bit
-          - StandaloneOSX # macOS
-          - WebGL # WebGL
+          # - StandaloneLinux64 # Linux 64-bit
+          # - StandaloneOSX # macOS
+          # - WebGL # WebGL
     steps:
       # Checkout the repository
       - name: Checkout repository
