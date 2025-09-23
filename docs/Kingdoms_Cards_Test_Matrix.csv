@@ -1,0 +1,10 @@
+Card,InDeckCount,PlayLegality (targets/limits),EffectOrder (effect→placement),FlipAppliedPerPlacement,OpponentSeesMoveBeforeRespond? (Y/N),Interaction: Sabotage,Interaction: Counter Offensive,CoinGainApplied?,EdgeCases (no legal placement after effect),DeterministicReplayID/Seed,Notes
+Fortify,2,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Assassinate,1,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Trenches,2,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Border Skirmish,1,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Guerrilla Tactics,2,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Sabotage (Response),1,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Spies,2,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Counter Offensive (Response),1,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
+Supply Lines,2,,[ ] Verified,[ ] Verified,N,[ ] Cancel/turn end behavior,[ ] Steal and play immediately behavior,[ ] Correct,[ ] Pass/No-coin behavior,[ ] Matches golden trace,
