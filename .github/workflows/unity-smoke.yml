@@ -24,7 +24,7 @@ jobs:
         with:
           unityVersion: 6000.2.2f1   # <- match your local Unity 6.2
           targetPlatform: StandaloneWindows64
-          # buildMethod: BuildScript.BuildWindows   # <- uncomment if you added the script
+          buildMethod: BuildScript.BuildWindows   # <- uncomment if you added the script
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
