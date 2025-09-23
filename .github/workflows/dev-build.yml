@@ -47,12 +47,17 @@ jobs:
 
       - name: Run Unity Tests
         uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 6000.2.2f1
           testMode: all
           artifactsPath: test-results
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: Development Test Results
+          customParameters: -logfile -
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -84,12 +89,17 @@ jobs:
 
       - name: Build Unity Project
         uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 6000.2.2f1
           targetPlatform: ${{ github.event.inputs.build_platform }}
           buildsPath: build
           buildName: Kingdoms-Dev-${{ github.event.inputs.build_platform }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+          customParameters: -logfile -
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
