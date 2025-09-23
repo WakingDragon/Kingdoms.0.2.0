@@ -1,0 +1,120 @@
+name: Development Build Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_platform:
+        description: 'Platform to build for'
+        required: true
+        default: 'StandaloneWindows64'
+        type: choice
+        options:
+        - StandaloneWindows64
+        - StandaloneLinux64
+        - StandaloneOSX
+        - WebGL
+      run_tests:
+        description: 'Run Unity tests'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+jobs:
+  # Optional test job
+  test:
+    name: Run Unity Tests
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.run_tests == 'true' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-test-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}-${{ hashFiles('Packages/manifest.json') }}
+          restore-keys: |
+            Library-test-
+            Library-
+
+      - name: Run Unity Tests
+        uses: game-ci/unity-test-runner@v4
+        with:
+          unityVersion: 6000.2.2f1
+          testMode: all
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: Development Test Results
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Development-Test-Results
+          path: test-results
+
+  # Build job
+  build:
+    name: Build for ${{ github.event.inputs.build_platform }}
+    runs-on: ubuntu-latest
+    needs: test
+    if: always() && (needs.test.result == 'success' || needs.test.result == 'skipped')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ github.event.inputs.build_platform }}-${{ hashFiles('ProjectSettings/ProjectVersion.txt') }}-${{ hashFiles('Packages/manifest.json') }}
+          restore-keys: |
+            Library-${{ github.event.inputs.build_platform }}-
+            Library-
+
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@v4
+        with:
+          unityVersion: 6000.2.2f1
+          targetPlatform: ${{ github.event.inputs.build_platform }}
+          buildsPath: build
+          buildName: Kingdoms-Dev-${{ github.event.inputs.build_platform }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Development-Build-${{ github.event.inputs.build_platform }}
+          path: build
+          retention-days: 3
+
+      - name: Development Build Summary
+        run: |
+          echo "## Development Build Complete 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Platform**: ${{ github.event.inputs.build_platform }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tests Run**: ${{ github.event.inputs.run_tests }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Unity Version**: 6000.2.2f1" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Build artifacts have been uploaded and will be available for 3 days." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event.inputs.run_tests }}" == "true" ]; then
+            if [ "${{ needs.test.result }}" == "success" ]; then
+              echo "✅ All tests passed!" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "❌ Some tests failed. Check the test results artifact." >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⏭️ Tests were skipped." >> $GITHUB_STEP_SUMMARY
+          fi

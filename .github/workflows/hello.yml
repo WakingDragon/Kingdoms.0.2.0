@@ -1,8 +1,48 @@
-name: Hello Actions
+name: Quick Validation
 on:
   workflow_dispatch:
+  push:
+    branches: [ main, staging-CI ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  hello:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello from $GITHUB_REPOSITORY"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Basic Unity project validation
+        run: |
+          echo "🎮 Kingdoms Unity Project Validation"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo ""
+          
+          # Check Unity project structure
+          if [ -f "ProjectSettings/ProjectVersion.txt" ]; then
+            echo "✅ Unity project detected"
+            echo "Unity Version: $(cat ProjectSettings/ProjectVersion.txt | head -n1)"
+          else
+            echo "❌ Not a Unity project"
+            exit 1
+          fi
+          
+          # Check for Assets directory
+          if [ -d "Assets" ]; then
+            asset_count=$(find Assets -type f -name "*.cs" | wc -l)
+            echo "✅ Assets directory found with $asset_count C# scripts"
+          else
+            echo "❌ Assets directory not found"
+            exit 1
+          fi
+          
+          # Check packages
+          if [ -f "Packages/manifest.json" ]; then
+            package_count=$(jq '.dependencies | length' Packages/manifest.json)
+            echo "✅ Package manifest found with $package_count dependencies"
+          fi
+          
+          echo "🎉 Basic validation passed!"
