@@ -2,6 +2,6 @@ namespace BP.Kingdoms.Core
 {
     public interface IRule
     {
-        RuleResult Evaluate(in GameState state, in IGameAction action);
+        public RuleResult Evaluate(GameState state, IGameAction action);
     }
 }

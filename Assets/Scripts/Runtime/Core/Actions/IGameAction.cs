@@ -1,4 +1,7 @@
 namespace BP.Kingdoms.Core
 {
-    public interface IGameAction { }
+    public interface IGameAction 
+    {
+        ActionKind Kind { get; }
+    }
 }

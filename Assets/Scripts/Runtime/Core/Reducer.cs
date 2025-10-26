@@ -2,16 +2,16 @@ namespace BP.Kingdoms.Core
 {
     public static class Reducer
     {
-        public static void Apply(GameState s, IGameAction a)
+        public static void Apply(GameState state, IGameAction action)
         {
-            switch (a)
+            switch (action)
             {
-                case PlaceMarker pm:
-                    var cell = s.Board.Cells[pm.At.X, pm.At.Y];
-                    cell.Occupy(pm.By);
+                case PlaceMarker placeAction:
+                    var cell = state.Board.Cells[placeAction.At.X, placeAction.At.Y];
+                    cell.Occupy(placeAction.By);
                     break;
                 case EndTurn _:
-                    s.Turn.NextTurn();
+                    state.EndTurn();
                     break;
             }
         }
