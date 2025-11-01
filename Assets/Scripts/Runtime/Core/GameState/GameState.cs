@@ -1,33 +1,39 @@
+using UnityEngine;
+
 namespace BP.Kingdoms.Core
 {
     public sealed class GameState
     {
-        public BoardState Board { get; } = new BoardState(9);
+        public BoardState Board { get; private set; }
         public PlayerId CurrentPlayer { get; private set; } = PlayerId.P1;
-        public TurnPhase Phase { get; private set; } = TurnPhase.Start;
+        public TurnPhase turnPhase { get; private set; } = TurnPhase.Start;
 
-        private int _seed = 0;
-
-        public int Seed
+        #region new game
+        public GameState(int boardSize)
         {
-            get => _seed;
-            set => _seed = value;
+            Board = new BoardState(boardSize);
         }
 
         public void FirstTurn(PlayerId firstPlayer)
         {
             CurrentPlayer = firstPlayer;
-            Phase = TurnPhase.Start;
+            turnPhase = TurnPhase.Start;
+        }
+        #endregion
+
+        public void DebugState()
+        {
+            Debug.Log($"Current Player: {CurrentPlayer}, TurnPhase: {turnPhase}");
         }
 
         public void BeginTurn()
         {
-            Phase = TurnPhase.Start;
+            turnPhase = TurnPhase.Start;
         }
 
         public void AdvancePhase()
         {
-            Phase = Phase switch
+            turnPhase = turnPhase switch
             {
                 TurnPhase.Start => TurnPhase.CardEffect,
                 TurnPhase.CardEffect => TurnPhase.Placement,
@@ -39,9 +45,9 @@ namespace BP.Kingdoms.Core
 
         public void EndTurn()
         {
-            Phase = TurnPhase.End;
+            turnPhase = TurnPhase.End;
             CurrentPlayer = (CurrentPlayer == PlayerId.P1) ? PlayerId.P2 : PlayerId.P1;
-            Phase = TurnPhase.Start;
+            turnPhase = TurnPhase.Start;
         }
 
     }

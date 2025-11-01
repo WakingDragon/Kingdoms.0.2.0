@@ -9,7 +9,7 @@ namespace BP.Kingdoms.Rules
             if (action.Kind == ActionKind.PlacePiece)
             {
                 var placeAction = (PlaceMarker)action;
-                if (!placeAction.At.InBounds(state.Board.Size)) return RuleResult.Fail("Out of bounds");
+                if (!placeAction.At.InBounds(state.Board.BoardSize)) return RuleResult.Fail("Out of bounds");
             }
             return RuleResult.Success("Cell in bounds.");
         }

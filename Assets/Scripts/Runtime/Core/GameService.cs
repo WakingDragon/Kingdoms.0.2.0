@@ -4,21 +4,29 @@ namespace BP.Kingdoms.Core
 {
     public sealed class GameService
     {
-        private readonly IRule _rules;
-        public GameState State { get; }
-
+        public readonly IRule Rules;
+        public GameState gameState { get; }
 
         public event Action<IGameAction, GameState> OnApplied; // for UI/network hooks
 
-        public GameService(GameState initial, IRule rules) { State = initial; _rules = rules; }
+        public GameService(int seed)    //for new games
+        {
+            gameState = GameInitializer.CreateNewGame(seed);
+        }
+
+        public GameService(GameState initial, IRule rules) 
+        { 
+            gameState = initial; 
+            Rules = rules; 
+        }
 
         public RuleResult TryApply(IGameAction action)
         {
-            var rr = _rules.Evaluate(State, action);
+            var rr = Rules.Evaluate(gameState, action);
             if (rr.Verdict == RuleVerdict.Success)
             {
-                Reducer.Apply(State, action);
-                OnApplied?.Invoke(action, State);
+                Reducer.Apply(gameState, action);
+                OnApplied?.Invoke(action, gameState);
             }
             return rr;
         }

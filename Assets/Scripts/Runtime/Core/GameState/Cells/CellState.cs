@@ -6,8 +6,11 @@ namespace BP.Kingdoms.Core
         public bool Occupied { get; private set; }
         public bool IsCastle { get; }
 
-
-        public CellState(bool isCastle = false) { IsCastle = isCastle; }
+        public CellState(bool isCastle = false, TileOccupant owner = TileOccupant.None)
+        {
+            IsCastle = isCastle;
+            Owner = owner;
+        }
 
 
         // Narrow, intentional mutators keep state safe

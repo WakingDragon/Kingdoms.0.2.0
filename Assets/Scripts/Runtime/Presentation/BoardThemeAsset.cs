@@ -19,7 +19,6 @@ namespace BP.Kingdoms.Presentation
 
         [Header("Castles")]
         public Sprite castleSprite;
-        public Color castleColor = Color.cyan;
     }
 }
 
