@@ -10,8 +10,8 @@ namespace BP.Kingdoms.Core
             {
                 case CardKey.Null:
                     return new NullCard();
-                //case CardKey.Fortify:
-                //    return new FortifyCard();
+                case CardKey.Fortify:
+                    return new FortifyCard();
                 //case CardKey.Assassinate:
                 //    return new AssassinateCard();
                 //case CardKey.Trenches:
@@ -22,8 +22,8 @@ namespace BP.Kingdoms.Core
                 //    return new GuerillaTacticsCard();
                 //case CardKey.Sabotage:
                 //    return new SabotageCard();
-                //case CardKey.Spies:
-                //    return new SpiesCard();
+                case CardKey.Spies:
+                    return new SpiesCard();
                 //case CardKey.Counter_Offensive:
                 //    return new CounterOffensiveCard();
                 //case CardKey.Supply_Lines:

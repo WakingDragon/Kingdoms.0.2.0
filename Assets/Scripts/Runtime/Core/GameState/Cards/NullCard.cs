@@ -2,10 +2,9 @@ using UnityEngine;
 
 namespace BP.Kingdoms.Core
 {
-    public class NullCard : ICard
+    public class NullCard : Card
     {
-        public CardKey CardKey => CardKey.Null;
-        public int CardKeyId => (int)CardKey;
+        public override CardKey CardKey => CardKey.Null;
     }
 }
 

@@ -30,9 +30,9 @@ namespace BP.Kingdoms.Core
             //create default hands/coins
             state.PlayerStates[PlayerId.P1].SetCoins(BoardSetup.DefaultStartingCoins);
             state.PlayerStates[PlayerId.P2].SetCoins(BoardSetup.DefaultStartingCoins);
-            var startingCard = BoardSetup.DefaultStartingCards;
-            state.PlayerStates[PlayerId.P1].Hand.Add(startingCard);
-            state.PlayerStates[PlayerId.P2].Hand.Add(startingCard);
+            var startingCards = BoardSetup.GetStartingCards;
+            state.PlayerStates[PlayerId.P1].Cards.AddRange(startingCards);
+            state.PlayerStates[PlayerId.P2].Cards.AddRange(startingCards);
 
             return state;
         }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BP.Kingdoms.Core
 {
@@ -16,8 +17,19 @@ namespace BP.Kingdoms.Core
         public static Vector2Int P1CastlePos => new Vector2Int(_p1CastlePosX, _p1CastlePosY);
         public static Vector2Int P2CastlePos => new Vector2Int(_p2CastlePosX, _p2CastlePosY);
 
-        public static int DefaultStartingCoins => 0;
-        public static ICard DefaultStartingCards => new NullCard();
+        //hands
+        private static int _startingCoins = 0;
+        public static int DefaultStartingCoins => _startingCoins;
+        public static void SetDefaultStartingCoins(int coins) //for testing purposes
+        {
+            _startingCoins = coins;
+        }
+        private static List<ICard> _startingCards = new List<ICard> { new NullCard() };
+        public static List<ICard> GetStartingCards => _startingCards;
+        public static void InjectStartingCards(List<ICard> cards) //for testing purposes
+        {
+            _startingCards.AddRange(cards);
+        }
 
     }
 }

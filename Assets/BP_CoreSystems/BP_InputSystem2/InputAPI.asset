@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fcb0403e960ed3498bf16070c2f6016, type: 3}
+  m_Name: InputAPI
+  m_EditorClassIdentifier: 
+  <isEnabled>k__BackingField: 1
+  toggleEnableInputEvt: {fileID: 11400000, guid: dbb2388286489b74f922979577f46a72, type: 2}
+  uiActionMapEvents:
+    <anyKeyEvent>k__BackingField: {fileID: 11400000, guid: 2ca812ef24c54dd4dbabe0a42a17cb75, type: 2}
+    <pauseEvt>k__BackingField: {fileID: 11400000, guid: 238cc015448e3284cbc8af185d2f31a9, type: 2}
+  defaultPlayerActionMapEvents:
+    <moveEvent>k__BackingField: {fileID: 11400000, guid: 7c605d5927fa41542a768888b8305882, type: 2}
+    <jumpEvent>k__BackingField: {fileID: 11400000, guid: 040eb25244d1de34082c2e759650bcc3, type: 2}
+    <pauseEvt>k__BackingField: {fileID: 11400000, guid: 238cc015448e3284cbc8af185d2f31a9, type: 2}
+  _onStartActionMap: 0

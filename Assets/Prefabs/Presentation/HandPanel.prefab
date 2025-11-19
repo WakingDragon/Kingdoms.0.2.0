@@ -59,6 +59,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Presentation.HandView
   _debugText: {fileID: 4776986287274731281}
+  _cardViewPrefab: {fileID: 5789655091752679191, guid: a56b0a119b67fe1419cd86fe205bd401, type: 3}
+  _cardBank: {fileID: 11400000, guid: 552c6b8c3fbe04d4d8ddd6b3f224ea7f, type: 2}
 --- !u!1 &4244101835442993497
 GameObject:
   m_ObjectHideFlags: 0

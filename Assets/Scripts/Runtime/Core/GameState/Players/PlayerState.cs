@@ -7,13 +7,13 @@ namespace BP.Kingdoms.Core
     {
         public PlayerId Id { get; private set; }
         public int Coins { get; private set; } = 0;
-        public List<ICard> Hand { get; private set; }
+        public List<ICard> Cards { get; private set; }
 
-        public PlayerState(PlayerId id, int coins, List<ICard> hand)
+        public PlayerState(PlayerId id, int coins, List<ICard> cards)
         {
             Id = id;
             Coins = coins;
-            Hand = hand;
+            Cards = cards;
         }
 
         #region coins and hands

@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Presentation.CardBank
   <cardsInBank>k__BackingField:
   - {fileID: 11400000, guid: 5fd442838b3d0db4f8d0d44ef98f1246, type: 2}
+  - {fileID: 11400000, guid: 7b5be25f3d0e23240b665d527c82c29f, type: 2}
+  - {fileID: 11400000, guid: a3054f79811530a4cbcf3aa61d20f806, type: 2}
