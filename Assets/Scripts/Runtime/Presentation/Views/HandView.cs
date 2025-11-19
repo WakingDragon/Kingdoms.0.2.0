@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using TMPro;
 using BP.Kingdoms.Core;
 using System.Collections.Generic;
+using System;
 
 namespace BP.Kingdoms.Presentation
 {
@@ -12,14 +13,15 @@ namespace BP.Kingdoms.Presentation
         [SerializeField] private TextMeshProUGUI _debugText;
         [SerializeField] private CardView _cardViewPrefab;
         [SerializeField] private CardBank _cardBank;
-        private List<CardView> _cardsInHand;
+        [SerializeField] private RectTransform _gridRoot;   // GridLayoutGroup holder
+        private List<CardView> _cardsInHand = new();
 
-        public void UpdateFromPlayerState(PlayerState state, bool isLocalPlayer)
+        public void UpdateFromPlayerState(PlayerState state, Action<int> onCardClicked, bool isLocalPlayer)
         {
             // Update the hand view based on the player state
             // This is a placeholder implementation
             DebugText(state, isLocalPlayer);
-            UpdateCards(state.Cards);
+            UpdateCards(state.Cards, onCardClicked);
         }
 
         private void DebugText(PlayerState state, bool isLocalPlayer)
@@ -35,27 +37,20 @@ namespace BP.Kingdoms.Presentation
             }
         }
 
-        private void UpdateCards(List<ICard> cards)
+        private void UpdateCards(List<ICard> cards, Action<int> onCardClicked)
         {
-            // Clear existing card views
-            if(_cardsInHand == null)
-            {
-                _cardsInHand = new List<CardView>();
-            }
-            foreach (var cardView in _cardsInHand)
-            {
-                Destroy(cardView.gameObject);
-            }
+            //clear cards
             _cardsInHand.Clear();
+            foreach (Transform child in _gridRoot) Destroy(child.gameObject);
 
             // Instantiate new card views based on the cards in hand
             foreach (var card in cards)
             {
                 //get the data obj 
                 var cardData = _cardBank.GetCardDisplayDataByKey(card.CardKey);
-                Debug.Log(cardData);
-                var cardView = Instantiate(_cardViewPrefab, transform);
-                cardView.SetCard(cardData);
+                //Debug.Log(cardData);
+                var cardView = Instantiate(_cardViewPrefab, _gridRoot);
+                cardView.SetCard(cardData, onCardClicked);
                 _cardsInHand.Add(cardView);
             }
         }

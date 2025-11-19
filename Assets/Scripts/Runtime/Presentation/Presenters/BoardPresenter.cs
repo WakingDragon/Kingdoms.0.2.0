@@ -77,7 +77,7 @@ namespace BP.Kingdoms.Presentation
             //TODO update coins
             //TODO update whose turn?
             UpdateBoardView(state);
-            handsView.UpdateFromGameState(state); //should just be receiving dumb hand data
+            handsView.UpdateFromGameState(state, OnCardClicked);
         }
 
         private void UpdateBoardView(GameState state)
@@ -144,6 +144,7 @@ namespace BP.Kingdoms.Presentation
             //change card view
             //tell teh engine to return new ruleset
             //tell the board present to update hints based on new ruleset
+            Debug.Log($"Card clicked: {cardId}");
         }
 
         private void OnDestroy()

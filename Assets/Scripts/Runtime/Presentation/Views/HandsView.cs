@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using System;
 
 namespace BP.Kingdoms.Presentation
 {
@@ -18,21 +19,21 @@ namespace BP.Kingdoms.Presentation
         [SerializeField] private HandView opponentHand;
 
 
-        public void BuildHands(PlayerId localPlayerId, System.Action<int> onCardClicked, GameState state)
+        public void BuildHands(PlayerId localPlayerId, Action<int> onCardClicked, GameState state)
         {
             _localPlayerId = localPlayerId;
 
-            UpdateFromGameState(state);
+            UpdateFromGameState(state, onCardClicked);
 
             IsBuilt = true;
         }
 
-        public void UpdateFromGameState(GameState state)
+        public void UpdateFromGameState(GameState state, Action<int> onCardClicked)
         {
             //update the hand view based on the game state
             (PlayerState localState, PlayerState opponentState) = GetPlayerStates(state);
-            localHand.UpdateFromPlayerState(localState, isLocalPlayer: true);
-            opponentHand.UpdateFromPlayerState(opponentState, isLocalPlayer: false);
+            localHand.UpdateFromPlayerState(localState, onCardClicked, isLocalPlayer: true);
+            opponentHand.UpdateFromPlayerState(opponentState, onCardClicked, isLocalPlayer: false);
         }
 
         private (PlayerState localState, PlayerState opponentState) GetPlayerStates(GameState state)
