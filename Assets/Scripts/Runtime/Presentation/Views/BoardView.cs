@@ -30,6 +30,7 @@ namespace BP.Kingdoms.Presentation
                 {
                     var cellView = Instantiate(cellPrefab, gridRoot);
                     var coords = new Vector2Int(x, y);
+                    cellView.gameObject.name = $"Cell_{x}_{y}";
                     cellView.Init(coords, _ => clickHandler(cellView));
                     _cells[coords] = cellView;
                 }

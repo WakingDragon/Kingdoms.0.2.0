@@ -462,17 +462,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &1901974381 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1115756065645335652, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
-  m_PrefabInstance: {fileID: 6647647197587326000}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0404553f05ba18a4483a8d3f40c44247, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Presentation.BoardView
 --- !u!1001 &1119288990544562058
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -484,7 +473,11 @@ PrefabInstance:
     - target: {fileID: 5295605519955641964, guid: d3c264fbab6f7824487d8b3215fb58ed, type: 3}
       propertyPath: boardView
       value: 
-      objectReference: {fileID: 1901974381}
+      objectReference: {fileID: 6647647197587326001}
+    - target: {fileID: 5295605519955641964, guid: d3c264fbab6f7824487d8b3215fb58ed, type: 3}
+      propertyPath: handsView
+      value: 
+      objectReference: {fileID: 6647647197587326002}
     - target: {fileID: 5810320398053290157, guid: d3c264fbab6f7824487d8b3215fb58ed, type: 3}
       propertyPath: _thisPlayer
       value: 2
@@ -548,7 +541,55 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2242603876930207934, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
       propertyPath: m_Name
-      value: BoardRoot
+      value: TableTop
+      objectReference: {fileID: 0}
+    - target: {fileID: 4508837058718240787, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4508837058718240787, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4508837058718240787, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4508837058718240787, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4826635816668349085, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5075377627247460321, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090218873547288368, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090218873547288368, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090218873547288368, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5090218873547288368, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6834908132399845614, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_VertexColorAlwaysGammaSpace
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6834908132399845614, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8448169353320486423, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
       propertyPath: m_Pivot.x
@@ -631,10 +672,34 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5647857189193217917, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+    - {fileID: 5952036474014916734, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+--- !u!114 &6647647197587326001 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4648336101250677913, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+  m_PrefabInstance: {fileID: 6647647197587326000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0404553f05ba18a4483a8d3f40c44247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Presentation.BoardView
+--- !u!114 &6647647197587326002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6368616986200204862, guid: 690a6c88e500e514298e0fe4ce407dad, type: 3}
+  m_PrefabInstance: {fileID: 6647647197587326000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74937cbb8a35ce945b91b3a65c0d8c82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Presentation.HandsView
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

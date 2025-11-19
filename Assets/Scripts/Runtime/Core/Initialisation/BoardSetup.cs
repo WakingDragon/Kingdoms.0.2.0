@@ -15,5 +15,9 @@ namespace BP.Kingdoms.Core
         public static int BoardSize => _boardSize;
         public static Vector2Int P1CastlePos => new Vector2Int(_p1CastlePosX, _p1CastlePosY);
         public static Vector2Int P2CastlePos => new Vector2Int(_p2CastlePosX, _p2CastlePosY);
+
+        public static int DefaultStartingCoins => 0;
+        public static ICard DefaultStartingCards => new NullCard();
+
     }
 }

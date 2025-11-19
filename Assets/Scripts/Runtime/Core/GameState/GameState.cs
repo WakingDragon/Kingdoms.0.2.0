@@ -1,11 +1,13 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BP.Kingdoms.Core
 {
     public sealed class GameState
     {
         public BoardState Board { get; private set; }
-        public PlayerId CurrentPlayer { get; private set; } = PlayerId.P1;
+        public PlayerId CurrentPlayerId { get; private set; } = PlayerId.P1;
+        public Dictionary<PlayerId,PlayerState> PlayerStates { get; private set; } = new Dictionary<PlayerId, PlayerState>();
         public TurnPhase turnPhase { get; private set; } = TurnPhase.Start;
 
         #region new game
@@ -16,14 +18,14 @@ namespace BP.Kingdoms.Core
 
         public void FirstTurn(PlayerId firstPlayer)
         {
-            CurrentPlayer = firstPlayer;
+            CurrentPlayerId = firstPlayer;
             turnPhase = TurnPhase.Start;
         }
         #endregion
 
         public void DebugState()
         {
-            Debug.Log($"Current Player: {CurrentPlayer}, TurnPhase: {turnPhase}");
+            Debug.Log($"Current Player: {CurrentPlayerId}, TurnPhase: {turnPhase}");
         }
 
         public void BeginTurn()
@@ -46,7 +48,7 @@ namespace BP.Kingdoms.Core
         public void EndTurn()
         {
             turnPhase = TurnPhase.End;
-            CurrentPlayer = (CurrentPlayer == PlayerId.P1) ? PlayerId.P2 : PlayerId.P1;
+            CurrentPlayerId = (CurrentPlayerId == PlayerId.P1) ? PlayerId.P2 : PlayerId.P1;
             turnPhase = TurnPhase.Start;
         }
 

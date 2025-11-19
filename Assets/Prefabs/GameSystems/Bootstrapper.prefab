@@ -47,6 +47,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Manager.KingdomsInitialiser
   _bootstrap: 1
   _seed: 1
+  _thisPlayer: 1
+  gameServiceDependencies:
+    <CardBank>k__BackingField: {fileID: 11400000, guid: 552c6b8c3fbe04d4d8ddd6b3f224ea7f, type: 2}
   _boardPresenter: {fileID: 5295605519955641964}
 --- !u!114 &5295605519955641964
 MonoBehaviour:

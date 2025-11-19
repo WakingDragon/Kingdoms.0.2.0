@@ -8,6 +8,7 @@ namespace BP.Kingdoms.Presentation
     public class BoardPresenter : MonoBehaviour
     {
         [SerializeField] private BoardView boardView;
+        [SerializeField] private HandsView handsView;
         [SerializeField] private BoardThemeAsset theme;
         private PlayerId _thisPlayer = PlayerId.P1;
 
@@ -27,28 +28,37 @@ namespace BP.Kingdoms.Presentation
             _thisPlayer = thisPlayer;
 
             //sign up for changes
+            _service.OnHints += OnHints;
             _service.OnApplied += OnChangeApplied;
 
             // Build visuals once
             if(!boardView.IsBuilt) boardView.BuildGrid(_boardSize, OnCellClicked, _thisPlayer);
 
-            // Paint checkerboard and castles
-            PaintStaticBoard(_service.gameState);
+            if(!handsView.IsBuilt) handsView.BuildHands(_thisPlayer, OnCardClicked, _service.gameState);
 
-            // First render
-            //RefreshAll();
+            // NB: this should not be required as 'refresh from game state' should provide all the info needed
+            //TODO refactor refreshall to UpdateFromGameState [gamestate has been init'd so should be just castles and whatnot]
+            //InitialiseBoardPresentation(_service.gameState);
+            ApplyNewGameState(_service.gameState);
+
+        }
+        #endregion
+
+        #region hints
+        private void OnHints(List<Coord> validCoords)
+        {
+            UpdateHints(validCoords);
         }
 
-        private void PaintStaticBoard(GameState state)
+        private void UpdateHints(List<Coord> validCoords)
         {
-            for (int y = 0; y < _boardSize; y++)
+            foreach (var c in validCoords)
             {
-                for (int x = 0; x < _boardSize; x++)
+                var cell = boardView.GetCell(new Vector2Int(c.X, c.Y));
+                if (cell != null)
                 {
-                    var cell = boardView.GetCell(new Vector2Int(x, y));
-                    bool dark = ((x + y) & 1) == 1;
-                    cell.SetBackground(dark ? theme.cellDark : theme.cellLight);
-                    TrySetCastle(x, y, cell, state);
+                    //Debug.Log($"Highlighting cell at {c.X},{c.Y}");
+                    cell.SetHint(true);
                 }
             }
         }
@@ -56,17 +66,33 @@ namespace BP.Kingdoms.Presentation
 
         private void OnChangeApplied(IGameAction action, GameState state)
         {
-            RefreshAll(state);
+            //TODO apply diffs and animations for turn steps in sequence (IGameAction or ResolvedTurn??)
+            ApplyNewGameState(state);
         }
 
-        private void RefreshAll(GameState state)
+        #region final board paint
+        private void ApplyNewGameState(GameState state)
         {
-            // Pieces
+            //TODO update cards
+            //TODO update coins
+            //TODO update whose turn?
+            UpdateBoardView(state);
+            handsView.UpdateFromGameState(state); //should just be receiving dumb hand data
+        }
+
+        private void UpdateBoardView(GameState state)
+        {
             for (int y = 0; y < _boardSize; y++)
+            {
                 for (int x = 0; x < _boardSize; x++)
                 {
-                    var occ = state.Board.GetOccupant(x, y);
                     var cellView = boardView.GetCell(new Vector2Int(x, y));
+                    if (IsCastleSetCastle(x, y, cellView, state)) //sets castle if castle
+                    {
+                        continue;
+                    }
+
+                    var occ = state.Board.GetOccupant(x, y);                   
 
                     if (occ == TileOccupant.None)
                     {
@@ -77,16 +103,29 @@ namespace BP.Kingdoms.Presentation
                         cellView.SetPiece(theme.pieceDisc, GetPlayerColour(occ), true);
                     }
                 }
-
-            // Legal moves for current player
-            boardView.ClearAllHighlights();
-            //_currentLegals = new HashSet<Vector2Int>(Rules.GetLegalPlacements(_gameState)); // returns IEnumerable<Coord>
-            foreach (var c in _currentLegals)
-            {
-                boardView.GetCell(new Vector2Int(c.x, c.y)).SetHighlight(true);
             }
         }
 
+        private bool IsCastleSetCastle(int x, int y, CellView cell, GameState state)
+        {
+            (bool isCastle, TileOccupant id) = state.Board.IsCastle(x, y);
+            if (isCastle)
+            {
+                if (id == TileOccupant.P1 || id == TileOccupant.P2)
+                {
+                    cell.SetCastle(true, theme.castleSprite, GetPlayerColour(id));
+                }
+            }
+            return isCastle;
+        }
+
+        private Color GetPlayerColour(TileOccupant id)
+        {
+            return (id == TileOccupant.P1 ? theme.p1Colour : theme.p2Colour);
+        }
+        #endregion
+
+        
         private void OnCellClicked(CellView cell)
         {
             var c = cell.Coords;
@@ -100,45 +139,11 @@ namespace BP.Kingdoms.Presentation
             //RefreshAll();
         }
 
-        //private void ApplyResolvedTurnToView(ResolvedTurn result)
-        //{
-        //    // Keep it simple for greybox: fast step-wise updates.
-        //    foreach (var step in result.Steps)
-        //    {
-        //        switch (step.Type)
-        //        {
-        //            case ResolutionStepType.CardEffect:
-        //                // (optional) flash HUD banner
-        //                break;
-        //            case ResolutionStepType.Placement:
-        //                var cv = boardView.GetCell(new Vector2Int(step.X, step.Y));
-        //                bool isA = result.ActivePlayer == PlayerId.A;
-        //                cv.SetPiece(theme.pieceDisc, isA ? theme.p1Colour : theme.p2Colour, true);
-        //                break;
-        //            case ResolutionStepType.Flip:
-        //                var fv = boardView.GetCell(new Vector2Int(step.X, step.Y));
-        //                bool toA = step.FlipTo == PlayerId.A;
-        //                fv.SetPiece(theme.pieceDisc, toA ? theme.p1Colour : theme.p2Colour, true);
-        //                break;
-        //        }
-        //    }
-        //}
-
-        private void TrySetCastle(int x, int y, CellView cell, GameState state)
+        private void OnCardClicked(int cardId)
         {
-            (bool isCastle, TileOccupant id) = state.Board.IsCastle(x, y);
-            if (isCastle)
-            {
-                if (id == TileOccupant.P1 || id == TileOccupant.P2)
-                {
-                    cell.SetCastle(true, theme.castleSprite, GetPlayerColour(id));
-                }
-            }
-        }
-
-        private Color GetPlayerColour(TileOccupant id)
-        {
-            return (id == TileOccupant.P1 ? theme.p1Colour : theme.p2Colour);
+            //change card view
+            //tell teh engine to return new ruleset
+            //tell the board present to update hints based on new ruleset
         }
 
         private void OnDestroy()

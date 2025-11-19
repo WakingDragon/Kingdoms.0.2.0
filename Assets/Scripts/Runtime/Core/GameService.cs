@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 namespace BP.Kingdoms.Core
 {
@@ -6,18 +8,30 @@ namespace BP.Kingdoms.Core
     {
         public readonly IRule Rules;
         public GameState gameState { get; }
+        public GameServiceDependencies Dependencies { get; private set; }
 
+        public event Action<List<Coord>> OnHints; // for UI/network hooks
         public event Action<IGameAction, GameState> OnApplied; // for UI/network hooks
 
-        public GameService(int seed)    //for new games
+        public GameService(int seed, GameServiceDependencies dependencies)    //for new games
         {
-            gameState = GameInitializer.CreateNewGame(seed);
+            Dependencies = dependencies;
+            gameState = DefaultGameStateFactory.CreateInitial(seed);
         }
 
         public GameService(GameState initial, IRule rules) 
         { 
             gameState = initial; 
             Rules = rules; 
+        }
+
+        public void PushHints()
+        {
+            var hints = new List<Coord>();
+            hints.Add(new Coord(1, 1)); //placeholder
+            hints.Add(new Coord(2, 1)); //placeholder
+            OnHints?.Invoke(hints);
+            //Debug.Log($"Trying to apply hints.");
         }
 
         public RuleResult TryApply(IGameAction action)

@@ -9,7 +9,7 @@ namespace BP.Kingdoms.Rules
             if (action.Kind == ActionKind.PlacePiece)
             {
                 var placeAction = (PlaceMarker)action;
-                if (placeAction.By != state.CurrentPlayer) return RuleResult.Fail("Not your turn");
+                if (placeAction.By != state.CurrentPlayerId) return RuleResult.Fail("Not your turn");
             }
             return RuleResult.Success("Is active player");
         }

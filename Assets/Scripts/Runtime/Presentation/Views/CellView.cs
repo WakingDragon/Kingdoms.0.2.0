@@ -14,6 +14,7 @@ namespace BP.Kingdoms.Presentation
         [SerializeField] private Image _highlight;
         [SerializeField] private Image _castleMark;
         [SerializeField] private TextMeshProUGUI _debugText;
+        [SerializeField] private Color _hintColor;
 
         public Vector2Int Coords { get; private set; }
         public UnityEvent<CellView> OnClicked = new();
@@ -26,6 +27,10 @@ namespace BP.Kingdoms.Presentation
             _button.onClick.RemoveAllListeners();
             _button.onClick.AddListener(() => OnClicked.Invoke(this));
             DebugText($"{coords.x},{coords.y}");
+
+            //init sprites etc.
+            _castleMark.enabled = false;
+            _highlight.enabled = false;
         }
 
         public void SetPiece(Sprite spriteOrNull, Color color, bool visible)
@@ -52,7 +57,11 @@ namespace BP.Kingdoms.Presentation
 
         public void SetHighlight(bool on) => _highlight.enabled = on;
 
-        public void SetBackground(Color c) { _background.color = c; }
+        public void SetHint(bool on) 
+        {
+            SetHighlight(on);
+            if (on) _highlight.color = _hintColor;
+        }
 
         private void DebugText(string text)
         {
