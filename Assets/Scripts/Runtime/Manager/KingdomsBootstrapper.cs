@@ -17,6 +17,8 @@ namespace BP.Kingdoms.Manager
         [SerializeField] private GameServiceDependencies gameServiceDependencies;
         private GameService _gameService;
         [SerializeField] private BoardPresenter _boardPresenter;
+        [SerializeField] private UIGameObjectDependencies _uiGameObjectDependencies;    //ui stuff to wire up for the game shell
+        private IGameShell _gameShell;
 
 
         [SerializeField] private List<CardData> _startingCards;
@@ -29,12 +31,20 @@ namespace BP.Kingdoms.Manager
 
         private void Bootstrap()
         {
+            InitialiseGameShell();
+
+            //old... TODO move this stuff into GameShell and initialisations called by GameShell
             InjectDebugStartingHand();
             _gameService = new GameService(_seed, gameServiceDependencies);  //for new game, pass in key stuff
             _boardPresenter.Init(_gameService, _thisPlayer);
 
             _gameService.gameState.DebugState();
             _gameService.PushHints();
+        }
+
+        private void InitialiseGameShell()
+        {
+            _gameShell = new KingdomsGameShell(gameServiceDependencies, _uiGameObjectDependencies);
         }
 
         private void InjectDebugStartingHand()
