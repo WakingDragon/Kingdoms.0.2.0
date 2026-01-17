@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8432434502120065697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8738404231382897324}
+  - component: {fileID: 5810320398053290157}
+  - component: {fileID: 5295605519955641964}
+  m_Layer: 0
+  m_Name: Bootstrapper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8738404231382897324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432434502120065697}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5810320398053290157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432434502120065697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5a7a57448e68d448b5f512dda99ac24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Manager.KingdomsInitialiser
+  _bootstrap: 1
+  _seed: 1
+  _thisPlayer: 1
+  gameServiceDependencies:
+    <CardBank>k__BackingField: {fileID: 11400000, guid: 552c6b8c3fbe04d4d8ddd6b3f224ea7f, type: 2}
+  _boardPresenter: {fileID: 5295605519955641964}
+--- !u!114 &5295605519955641964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8432434502120065697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2bb9edb9f6ac534599f37cfe0463152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BP.Kingdoms.Presentation.BoardPresenter
+  boardView: {fileID: 0}
+  theme: {fileID: 11400000, guid: 889dce40901cb8e49bf0f2150b6bff64, type: 2}
